@@ -21,17 +21,16 @@ if __name__ == "__main__":
         results_dir.mkdir(exist_ok=True)
 
     # num_vectors = [1k, 2k, ..., 10k, 250k, ~500k]
-    num_vectors = list(range(1_000, 11_000, 1_000)) + [100_000, 250_000, 486_000]
+    num_vectors = list(range(1, 11, 1)) + [100, 250, 486]
 
     # create the datasets if they don't exist
     for n in num_vectors:
-        fn = get_dataset_fn(f"cohere-{n//1000}k-angular")
+        fn = get_dataset_fn(f"cohere-{n}k-angular")
         _cohere_wiki(fn, "angular", n)
-
 
     # run the benchmarking script on each dataset (vary the number of vectors)
     for n in num_vectors:
-        sys.argv = ["main.py", "--algorithm", "qdrant", "--dataset", f"cohere-{n//1000}k-angular", "--batch"]
+        sys.argv = ["main.py", "--algorithm", "qdrant", "--dataset", f"cohere-{n}k-angular", "--batch"]
         main() # run the benchmarking script
 
     # run the benchmarking script on 10k dataset (vary the value of k - number of neighbors)

@@ -530,5 +530,9 @@ DATASETS = {
     "movielens1m-jaccard": movielens1m,
     "movielens10m-jaccard": movielens10m,
     "movielens20m-jaccard": movielens20m,
-    "cohere-5k-angular": lambda out_fn: _cohere_wiki(out_fn, "angular", 5_000),
 }
+
+DATASETS.update({
+    f"cohere-{n}k-angular": lambda out_fn: _cohere_wiki(out_fn, "angular", n * 1000)
+    for n in [1, 5, 10, 50, 100, 250, 486] # 1k, 5k, ..., 486k
+})

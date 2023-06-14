@@ -162,4 +162,5 @@ class Qdrant(BaseANN):
 
     def __str__(self):
         hnsw_ef = self._search_params["hnsw_ef"]
-        return f"Qdrant(quantization={self._quantization}, hnsw_ef={hnsw_ef}, grpc={self._grpc})"
+        rescore = self._search_params["rescore"]
+        return f"Qdrant(quantization={self._quantization}, m={self._m}, ef_construct={self._ef_construct}, grpc={self._grpc}, hnsw_ef={hnsw_ef}, rescore={rescore})"
