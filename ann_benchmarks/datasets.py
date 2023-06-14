@@ -476,6 +476,32 @@ def movielens20m(out_fn):
     movielens("ml-20m.zip", "ml-20m/ratings.csv", out_fn, ",", True)
 
 
+def _cohere_wiki(out_fn, distance="euclidean", n=None):
+    from pathlib import Path
+
+    if Path(out_fn).exists():
+        print("Dataset already exists")
+        return
+
+    from datasets import load_dataset
+    import numpy as np
+    data = load_dataset(f"Cohere/wikipedia-22-12-simple-embeddings", split="train")
+
+    if n is not None:
+        data = data.select(range(n))
+
+    test_set_size = int(min(10_0000, len(data) * 0.1))
+
+    embeddings = data.to_pandas()['emb'].to_numpy()
+    embeddings = np.vstack(embeddings).reshape((-1, 768))
+
+    X_train = embeddings[:-test_set_size]
+    X_test = embeddings[-test_set_size:]
+
+    write_output(X_train, X_test, out_fn, distance)
+    print("stored data in %s" % out_fn)
+
+
 DATASETS = {
     "deep-image-96-angular": deep_image,
     "fashion-mnist-784-euclidean": fashion_mnist,
@@ -504,4 +530,5 @@ DATASETS = {
     "movielens1m-jaccard": movielens1m,
     "movielens10m-jaccard": movielens10m,
     "movielens20m-jaccard": movielens20m,
+    "cohere-5k-angular": lambda out_fn: _cohere_wiki(out_fn, "angular", 5_000),
 }

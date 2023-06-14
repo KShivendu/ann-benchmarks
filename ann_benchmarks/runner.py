@@ -159,7 +159,7 @@ def run_from_cmdline():
 
 """
     )
-    parser.add_argument("--dataset", choices=DATASETS.keys(), help="Dataset to benchmark on.", required=True)
+    parser.add_argument("--dataset", help="Dataset to benchmark on.", required=True)
     parser.add_argument("--algorithm", help="Name of algorithm for saving the results.", required=True)
     parser.add_argument(
         "--module", help='Python module containing algorithm. E.g. "ann_benchmarks.algorithms.annoy"', required=True

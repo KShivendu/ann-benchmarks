@@ -51,7 +51,7 @@ def main():
         metavar="NAME",
         help="the dataset to load training points from",
         default="glove-100-angular",
-        choices=DATASETS.keys(),
+        # choices=DATASETS.keys(),
     )
     parser.add_argument(
         "-k", "--count", default=10, type=positive_int, help="the number of near neighbours to search for"
@@ -93,6 +93,7 @@ def main():
     parser.add_argument("--parallelism", type=positive_int, help="Number of Docker containers in parallel", default=1)
 
     args = parser.parse_args()
+    print("Args are:", args)
     if args.timeout == -1:
         args.timeout = None
 
@@ -193,7 +194,8 @@ def main():
         definitions = definitions[: args.max_n_algorithms]
 
     if len(definitions) == 0:
-        raise Exception("Nothing to run")
+        print("Nothing to run for dataset %s" % args.dataset)
+        return
     else:
         logger.info(f"Order: {definitions}")
 

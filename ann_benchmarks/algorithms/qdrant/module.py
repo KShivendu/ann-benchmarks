@@ -17,13 +17,13 @@ BATCH_SIZE = 128
 class Qdrant(BaseANN):
     _distances_mapping = {"dot": Distance.DOT, "angular": Distance.COSINE, "euclidean": Distance.EUCLID}
 
-    def __init__(self, metric, quantization, m, ef_construct):
+    def __init__(self, metric, quantization, m, ef_construct, use_grpc):
         self._ef_construct = ef_construct
         self._m = m
         self._metric = metric
         self._collection_name = "ann_benchmarks_test"
         self._quantization = quantization
-        self._grpc = True
+        self._grpc = use_grpc
         self._search_params = {"hnsw_ef": None, "rescore": True}
         self.batch_results = []
 
@@ -162,4 +162,4 @@ class Qdrant(BaseANN):
 
     def __str__(self):
         hnsw_ef = self._search_params["hnsw_ef"]
-        return f"Qdrant(quantization={self._quantization}, hnsw_ef={hnsw_ef})"
+        return f"Qdrant(quantization={self._quantization}, hnsw_ef={hnsw_ef}, grpc={self._grpc})"
