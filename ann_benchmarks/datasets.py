@@ -1,6 +1,7 @@
 import os
 import random
 from urllib.request import urlopen, urlretrieve
+from typing_extensions import Literal
 
 import h5py
 import numpy
@@ -477,9 +478,7 @@ def movielens20m(out_fn):
 
 
 def _cohere_wiki(out_fn, distance="euclidean", n=None):
-    from pathlib import Path
-
-    if Path(out_fn).exists():
+    if os.path.exists(out_fn).exists():
         print("Dataset already exists")
         return
 
@@ -497,6 +496,31 @@ def _cohere_wiki(out_fn, distance="euclidean", n=None):
 
     X_train = embeddings[:-test_set_size]
     X_test = embeddings[-test_set_size:]
+
+    write_output(X_train, X_test, out_fn, distance)
+    print("stored data in %s" % out_fn)
+
+
+def _wiki_1k(out_fn, distance="euclidean", provider: Literal["cohere", "openai"] = "cohere"):
+    if os.path.exists(out_fn):
+        print("Dataset already exists")
+        return
+
+    from datasets import load_dataset
+    import numpy as np
+
+    ds = load_dataset(f"KShivendu/wikipedia-1k-cohere-openai-embeddings", split="train")
+    embeddings = ds.to_pandas()[provider].to_numpy()
+    embeddings = np.vstack(embeddings).reshape((-1, 1536 if provider == "openai" else 768))
+
+    test_set_size = 100
+
+    # randomly select test set
+    test_indices = np.random.choice(len(embeddings), size=test_set_size, replace=False)
+    test_indices.sort()
+
+    X_test = embeddings[test_indices]
+    X_train = np.delete(embeddings, test_indices, axis=0)
 
     write_output(X_train, X_test, out_fn, distance)
     print("stored data in %s" % out_fn)
@@ -535,4 +559,11 @@ DATASETS = {
 DATASETS.update({
     f"cohere-{n}k-angular": lambda out_fn: _cohere_wiki(out_fn, "angular", n * 1000)
     for n in [1, 5, 10, 50, 100, 250, 486] # 1k, 5k, ..., 486k
+})
+
+DATASETS.update({
+    "wikipedia-1k-cohere-angular": lambda out_fn: _wiki_1k(out_fn, "angular", "cohere"),
+    "wikipedia-1k-openai-angular": lambda out_fn: _wiki_1k(out_fn, "angular", "openai"),
+    "wikipedia-1k-cohere-euclidean": lambda out_fn: _wiki_1k(out_fn, "euclidean", "cohere"),
+    "wikipedia-1k-openai-euclidean": lambda out_fn: _wiki_1k(out_fn, "euclidean", "openai"),
 })
