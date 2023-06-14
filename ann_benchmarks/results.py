@@ -36,6 +36,7 @@ def store_results(dataset, count, definition, query_arguments, attrs, results, b
         distances[i] = [d for n, d in ds] + [float("inf")] * (count - len(ds))
     f.close()
 
+
 def load_all_results(dataset=None, count=None, batch_mode=False):
     for root, _, files in os.walk(get_result_filename(dataset, count)):
         for fn in files:

@@ -21,8 +21,7 @@ if __name__ == "__main__":
                 dataset, _ = get_dataset(dataset_name)
                 results = compute_metrics_all_runs(dataset, results, args.recompute)
                 for res in results:
-                    res["dataset"] = dataset_name
-                    res['mode'] = mode
+                    res.update({"dataset": dataset_name, "mode": mode})
                     dfs.append(res)
     if len(dfs) > 0:
         with open(args.output, "w", newline="") as csvfile:

@@ -485,7 +485,7 @@ def _cohere_wiki(out_fn, distance="euclidean", n=None):
 
     from datasets import load_dataset
     import numpy as np
-    data = load_dataset(f"Cohere/wikipedia-22-12-simple-embeddings", split="train")
+    data = load_dataset("Cohere/wikipedia-22-12-simple-embeddings", split="train")
 
     if n is not None:
         data = data.select(range(n))
