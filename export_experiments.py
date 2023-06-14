@@ -67,7 +67,7 @@ def export_all_results():
             df = pd.concat([df, new_df], ignore_index=True)
 
     # sort df by "train_vector_count" or "candidates" column:
-    df.sort_values("train_vector_count").to_csv("results.csv", index=False)
+    df.sort_values("train_vector_count").to_csv("experiments.csv", index=False)
 
 
 if __name__ == "__main__":
