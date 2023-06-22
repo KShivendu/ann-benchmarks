@@ -1,0 +1,40 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Create datasets",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/create_dataset.py",
+            "args": [
+                "--dataset",
+                "cohere-5k-angular"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: Rich dataset",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/create_richer_dataset.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: Create website",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/data_export.py",
+            "args": [
+                "--output",
+                "res.csv"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}

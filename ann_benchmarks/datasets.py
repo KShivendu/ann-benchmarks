@@ -525,6 +525,30 @@ def _wiki_1k(out_fn, distance="euclidean", provider: Literal["cohere", "openai"]
     write_output(X_train, X_test, out_fn, distance)
     print("stored data in %s" % out_fn)
 
+def _dbpedia_openai(out_fn, n):
+    if os.path.exists(out_fn):
+        print("Dataset already exist")
+        return
+
+    from datasets import load_dataset
+    import numpy as np
+    data = load_dataset("KShivendu/dbpedia-entities-openai-1M", split="train")
+    data = data.select(range(n))
+
+    print("value of n in k", n / 1_000)
+    print(f"loaded {len(data)} entries")
+
+    test_set_size = int(min(10_000, len(data) * 0.1))
+    print("test_set_size", test_set_size)
+
+    embeddings = data.to_pandas()['openai'].to_numpy()
+    embeddings = np.vstack(embeddings).reshape((-1, 1536))
+
+    X_train = embeddings[:-test_set_size]
+    X_test = embeddings[-test_set_size:]
+
+    write_output(X_train, X_test, out_fn, "angular")
+    print("stored data in %s" % out_fn)
 
 DATASETS = {
     "deep-image-96-angular": deep_image,
@@ -567,3 +591,12 @@ DATASETS.update({
     "wikipedia-1k-cohere-euclidean": lambda out_fn: _wiki_1k(out_fn, "euclidean", "cohere"),
     "wikipedia-1k-openai-euclidean": lambda out_fn: _wiki_1k(out_fn, "euclidean", "openai"),
 })
+
+num_vectors = [10_000] + list(range(100_000, 1_100_000, 100_000))
+
+DATASETS.update({
+    f"dbpedia-openai-{n//1000}k-angular": lambda out_fn: _dbpedia_openai(out_fn, n)
+    for n in num_vectors
+})
+
+

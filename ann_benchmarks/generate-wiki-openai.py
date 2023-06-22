@@ -8,11 +8,11 @@ LIMIT = 1000
 
 tqdm.pandas()
 
-wikipedia_ds = load_dataset('Cohere/wikipedia-22-12-simple-embeddings', split="train")
+ds = load_dataset('Cohere/wikipedia-22-12-simple-embeddings', split="train")
 # get first LIMIT samples:
-wikipedia_ds = wikipedia_ds.select(range(LIMIT)).rename_column('emb', 'cohere')
+ds = ds.select(range(LIMIT)).rename_column('emb', 'cohere')
 # create pandas dataframe from the dataset:
-df = wikipedia_ds.to_pandas()
+df = ds.to_pandas()
 
 import time
 
