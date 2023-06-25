@@ -188,6 +188,16 @@ all_metrics = {
         ),  # noqa
         "worst": float("inf"),
     },
+    "mem_before": {
+        "description": "Memory usage before indexing (MB)",
+        "function": lambda true_distances, run_distances, metrics, times, run_attrs: run_attrs.get("mem_usage_before"),  # noqa
+        "worst": float("inf"),
+    },
+    "mem_after": {
+        "description": "Memory usage after indexing (MB)",
+        "function": lambda true_distances, run_distances, metrics, times, run_attrs: run_attrs.get("mem_usage_after", 0),  # noqa
+        "worst": float("inf"),
+    },
     "indexsize": {
         "description": "Index size (kB)",
         "function": lambda true_distances, run_distances, metrics, times, run_attrs: index_size(
