@@ -127,7 +127,8 @@ function""" % (
         memory_usage_before = algo.get_memory_usage()
         algo.fit(X_train)
         build_time = time.time() - t0
-        index_size = algo.get_memory_usage() - memory_usage_before
+        memory_usage_after = algo.get_memory_usage()
+        index_size = memory_usage_after - memory_usage_before
         print("Built index in", build_time)
         print("Index size: ", index_size)
 
@@ -143,6 +144,8 @@ function""" % (
                 algo.set_query_arguments(*query_arguments)
             descriptor, results = run_individual_query(algo, X_train, X_test, distance, count, run_count, batch)
             descriptor["build_time"] = build_time
+            descriptor["mem_usage_before"] = memory_usage_before
+            descriptor["mem_usage_after"] = memory_usage_after
             descriptor["index_size"] = index_size
             descriptor["algo"] = definition.algorithm
             descriptor["dataset"] = dataset
