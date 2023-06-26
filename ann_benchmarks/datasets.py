@@ -85,7 +85,9 @@ def write_output_with_existing_data(from_path: str, to_path: str, limit: int):
                     dest.create_dataset('train', data=modified_data)
                 else:
                     src.copy(dataset_name, dest)
-
+            
+            for attr in src.attrs:
+                dest.attrs[attr] = src.attrs[attr]
 """
 param: train and test are arrays of arrays of indices.
 """
