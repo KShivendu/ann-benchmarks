@@ -548,7 +548,7 @@ def _dbpedia_openai(out_fn, n):
         return
 
     dataset_1M_path = "data/dbpedia-openai-1000k-angular.hdf5"
-    if os.path.exists(out_fn) and os.path.exists(dataset_1M_path):
+    if os.path.exists(dataset_1M_path):
         limit = int(out_fn.split("-")[-2].split("k")[0]) * 1_000
         write_output_with_existing_data(dataset_1M_path, out_fn, limit)
         return
