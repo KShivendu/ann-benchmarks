@@ -71,6 +71,21 @@ def write_output(train, test, fn, distance, point_type="float", count=100):
     f.close()
 
 
+def write_output_with_existing_data(from_path: str, to_path: str, limit: int):
+    # write content of f to out_fn as a new h5py file
+    # but only write the first limit entries
+    # pass
+    print("Write output with existing Params are:", (from_path, to_path, limit))
+
+    with h5py.File(from_path, 'r') as src:
+        with h5py.File(to_path, 'w') as dest:
+            for dataset_name in src:
+                if dataset_name == 'train':
+                    modified_data = src['train'][:limit]
+                    dest.create_dataset('train', data=modified_data)
+                else:
+                    src.copy(dataset_name, dest)
+
 """
 param: train and test are arrays of arrays of indices.
 """
@@ -528,6 +543,12 @@ def _wiki_1k(out_fn, distance="euclidean", provider: Literal["cohere", "openai"]
 def _dbpedia_openai(out_fn, n):
     if os.path.exists(out_fn):
         print("Dataset already exist")
+        return
+
+    dataset_1M_path = "data/dbpedia-openai-1000k-angular.hdf5"
+    if os.path.exists(out_fn) and os.path.exists(dataset_1M_path):
+        limit = int(out_fn.split("-")[-2].split("k")[0]) * 1_000
+        write_output_with_existing_data(dataset_1M_path, out_fn, limit)
         return
 
     from datasets import load_dataset
