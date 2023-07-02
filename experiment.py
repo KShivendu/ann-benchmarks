@@ -2,7 +2,7 @@ import sys
 import os
 import argparse
 from pathlib import Path
-from ann_benchmarks.datasets import get_dataset_fn, _cohere_wiki, _dbpedia_openai
+from ann_benchmarks.datasets import get_dataset_fn, _cohere_wiki, dbpedia_openai
 
 from multiprocessing import freeze_support
 from ann_benchmarks.main import main
@@ -22,22 +22,16 @@ if __name__ == "__main__":
 
     results_dir.mkdir(exist_ok=True)
 
-    # num_vectors = [1k, 2k, ..., 10k, 250k, ~500k]
-    # num_vectors = list(range(1, 11, 1)) + [100, 250, 486]
-    #  num_vectors = [10_000] + list(range(100_000, 1_000_000, 100_000))
-    #  num_vectors = list(range(200_000, 1_000_000, 100_000))
-    num_vectors = [1_000_000]
+    num_vectors = range(100_000, 1_100_000, 100_000) # 100k to 1M
 
     # create the datasets if they don't exist
     for n in num_vectors:
-        fn = get_dataset_fn(f"dbpedia-openai-{n//1000}k-angular")
-        _dbpedia_openai(fn, n)
+        dataset_name = f"dbpedia-openai-{n//1000}k-angular"
+        fn = get_dataset_fn()
+        dbpedia_openai(fn, n)
         for algo in ["qdrant", "pgvector"]:
-            sys.argv = ["main.py", "--algorithm", algo, "--dataset", f"dbpedia-openai-{n//1000}k-angular", "--batch", "--num-vectors", str(n)]
+            sys.argv = ["main.py", "--algorithm", algo, "--dataset", dataset_name, "--batch", "--num-vectors", str(n)]
             main() # run the benchmarking script
-
-    # run the benchmarking script on each dataset (vary the number of vectors)
-        #  for n in num_vectors:
 
     # run the benchmarking script on 10k dataset (vary the value of k - number of neighbors)
     # for k in [3, 5, 7, 10, 25, 51, 75, 101]:

@@ -85,7 +85,7 @@ def write_output_with_existing_data(from_path: str, to_path: str, limit: int):
                     dest.create_dataset('train', data=modified_data)
                 else:
                     src.copy(dataset_name, dest)
-            
+
             for attr in src.attrs:
                 dest.attrs[attr] = src.attrs[attr]
 """
@@ -542,7 +542,7 @@ def _wiki_1k(out_fn, distance="euclidean", provider: Literal["cohere", "openai"]
     write_output(X_train, X_test, out_fn, distance)
     print("stored data in %s" % out_fn)
 
-def _dbpedia_openai(out_fn, n):
+def dbpedia_openai(out_fn, n):
     if os.path.exists(out_fn):
         print("Dataset already exist")
         return
@@ -567,8 +567,8 @@ def _dbpedia_openai(out_fn, n):
     embeddings = data.to_pandas()['openai'].to_numpy()
     embeddings = np.vstack(embeddings).reshape((-1, 1536))
 
-    X_train = embeddings[:-test_set_size]
-    X_test = embeddings[-test_set_size:]
+    X_train = embeddings[test_set_size:]
+    X_test = embeddings[:test_set_size] # Use first 10k as test set
 
     write_output(X_train, X_test, out_fn, "angular")
     print("stored data in %s" % out_fn)
@@ -615,11 +615,7 @@ DATASETS.update({
     "wikipedia-1k-openai-euclidean": lambda out_fn: _wiki_1k(out_fn, "euclidean", "openai"),
 })
 
-num_vectors = [10_000] + list(range(100_000, 1_100_000, 100_000))
-
 DATASETS.update({
-    f"dbpedia-openai-{n//1000}k-angular": lambda out_fn: _dbpedia_openai(out_fn, n)
-    for n in num_vectors
+    f"dbpedia-openai-{n//1000}k-angular": lambda out_fn: dbpedia_openai(out_fn, n)
+    for n in ([10_000] + list(range(100_000, 1_100_000, 100_000)))
 })
-
-
