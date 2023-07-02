@@ -33,7 +33,7 @@ if __name__ == "__main__":
         fn = get_dataset_fn(f"dbpedia-openai-{n//1000}k-angular")
         _dbpedia_openai(fn, n)
         for algo in ["qdrant", "pgvector"]:
-            sys.argv = ["main.py", "--algorithm", algo, "--dataset", f"dbpedia-openai-{n//1000}k-angular", "--batch"]
+            sys.argv = ["main.py", "--algorithm", algo, "--dataset", f"dbpedia-openai-{n//1000}k-angular", "--batch", "--num-vectors", str(n)]
             main() # run the benchmarking script
 
     # run the benchmarking script on each dataset (vary the number of vectors)

@@ -57,6 +57,9 @@ def main():
         "-k", "--count", default=10, type=positive_int, help="the number of near neighbours to search for"
     )
     parser.add_argument(
+        "--num-vectors", default=1_000_000, type=positive_int, help="the number of vectors to use for the dataset"
+    )
+    parser.add_argument(
         "--definitions", metavar="FOLDER", help="base directory of algorithms. Algorithm definitions expected at 'FOLDER/*/config.yml'", default="ann_benchmarks/algorithms"
     )
     parser.add_argument("--algorithm", metavar="NAME", help="run only the named algorithm", default=None)
