@@ -55,7 +55,7 @@ float:
 ```
 
 - You must have ~17GB RAM for Qdrant and ~14GB for PgVector when running against the full dataset [KShivendu/dbpedia-entities-openai-1M](https://huggingface.co/datasets/KShivendu/dbpedia-entities-openai-1M) dataset. You also need 70-80GB of disk space.
-- Now run `python experiment.py`. This script runs against subsets of the dbpedia dataset covering - 100k, 200k, ..., 1M vectors in the DB. You can rerun this script at a later time and it will resume from where it left off.
+- Now run `python pgvector_vs_qdrant.py`. This script runs against subsets of the dbpedia dataset covering - 100k, 200k, ..., 1M vectors in the DB. You can rerun this script at a later time and it will resume from where it left off.
 - Once you ran all the experiments you were interested in, just run `python data_export.py --out res.csv`
 
 ### Results:
